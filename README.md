@@ -4,6 +4,8 @@
 
 《知微》就是用它写的：一部重生宫斗题材的女频文字游戏，29 个节点、4 个结局、672 条通关路径。
 
+**在线试玩：[huaben.vercel.app](https://huaben.vercel.app)**
+
 ![封面](screenshots/01-封面.png)
 
 | | |
@@ -133,9 +135,12 @@ npm run build
 # dist/index.html    游戏列表页
 ```
 
-### 方式一：Vercel / Netlify / Cloudflare Pages（推荐，私有仓库也能用）
+### 方式一：Vercel（已配置好，push 即部署）
 
-连上仓库即可，配置三项：
+本项目已连上 Vercel 并完成首次部署：**https://huaben.vercel.app**
+
+之后每次 push 到 `main`，Vercel 会自动重新构建发布。构建配置写在 `vercel.json` 里，
+换到 Netlify / Cloudflare Pages 时照抄这三项即可：
 
 | 项 | 值 |
 |---|---|
