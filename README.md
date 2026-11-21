@@ -133,12 +133,28 @@ npm run build
 # dist/index.html    游戏列表页
 ```
 
-### 部署到 GitHub Pages
+### 方式一：Vercel / Netlify / Cloudflare Pages（推荐，私有仓库也能用）
 
-仓库推上去后，在 **Settings → Pages → Source** 里选 **GitHub Actions** 即可。
-之后每次 push 到 `main`，`pages.yml` 会自动校验、打包、发布。
+连上仓库即可，配置三项：
 
-拿到 `https://<user>.github.io/<repo>/` 后，玩家点链接就能玩，存档正常工作。
+| 项 | 值 |
+|---|---|
+| 构建命令 | `node tools/build.mjs` |
+| 输出目录 | `dist` |
+| Node 版本 | 20 |
+
+之后每次 push 自动重新发布，拿到 `https://xxx.vercel.app` 就能发给玩家。
+
+### 方式二：GitHub Pages
+
+需要**公开仓库** —— 免费账号的私有仓库不支持 Pages（实测 422）。
+
+仓库转公开后，在 **Settings → Pages → Source** 选 **GitHub Actions**，
+再把 `.github/workflows/pages.yml` 里 `on:` 下的 `push:` 两行注释放开即可。
+
+### 方式三：直接发文件
+
+`npm run build` 后把 `dist/<id>.html` 发给别人，双击就能玩——但没有存档（见下）。
 
 ---
 
