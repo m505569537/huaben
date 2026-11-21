@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 校验剧本：断线、死路、够不着的结局，都在这一步拦下来
+      - name: 校验剧本
+        run: node tools/validate.mjs
+
+      - name: 打包单文件
+        run: node tools/build.mjs
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: games
+          path: dist/
+          retention-days: 30

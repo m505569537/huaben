@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14100e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>话本 · 文字游戏</title>
+<link rel="stylesheet" href="engine.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- 封面 -->
+  <section class="screen is-on" id="scr-title">
+    <p class="warnbar" id="warnbar" hidden></p>
+    <div class="seal">知微</div>
+    <h1 class="title" id="t-title">知微</h1>
+    <p class="title-sub" id="t-sub"></p>
+    <div class="rule"></div>
+    <p class="title-tag" id="t-tag"></p>
+    <div class="cover-acts">
+      <button class="btn-primary" id="btn-start">开 始</button>
+      <button class="btn-ghost" id="btn-continue" hidden>继续上次</button>
+      <button class="btn-ghost" id="btn-code-cover" hidden>载入存档码</button>
+      <button class="btn-ghost" id="btn-ends" hidden></button>
+    </div>
+  </section>
+
+  <!-- 游戏 -->
+  <section class="screen" id="scr-game">
+    <div class="warnbar slim" id="warnbar-game" hidden></div>
+    <div class="hud"><div class="stats" id="stats"></div></div>
+    <div class="stage" id="stage">
+      <div class="chapter" id="chapter"></div>
+      <div class="prose" id="prose"></div>
+      <div class="choices" id="choices"></div>
+    </div>
+    <div class="toolbar">
+      <button class="btn-ghost" id="btn-log">回看</button>
+      <button class="btn-ghost" id="btn-code">存档</button>
+      <button class="btn-ghost" id="btn-home">封面</button>
+    </div>
+  </section>
+
+  <!-- 结局 -->
+  <section class="screen" id="scr-end">
+    <div class="end-wrap">
+      <div class="end-label" id="end-label"></div>
+      <h2 class="end-title" id="end-title"></h2>
+      <div class="end-rank" id="end-rank"></div>
+      <div class="end-prose" id="end-text"></div>
+      <div class="end-comment" id="end-comment"></div>
+      <div class="end-progress" id="end-progress"></div>
+      <div class="end-acts">
+        <button class="btn-primary" id="btn-again">再来一次</button>
+        <button class="btn-ghost" id="btn-end-home">回封面</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 回看 -->
+  <div class="sheet" id="sheet">
+    <div class="sheet-head">
+      <span>已 读</span>
+      <button class="btn-ghost" id="btn-sheet-close">收起</button>
+    </div>
+    <div class="sheet-body" id="sheet-body"></div>
+  </div>
+
+  <!-- 存档码 -->
+  <div class="sheet" id="code-sheet">
+    <div class="sheet-head">
+      <span>存 档 码</span>
+      <button class="btn-ghost" id="btn-code-close">收起</button>
+    </div>
+    <div class="sheet-body">
+      <p class="code-tip">换设备、清缓存之前，把下面这串复制走。下次粘回去就能接着玩——它不依赖浏览器存储。</p>
+      <textarea class="code-box" id="code-out" readonly></textarea>
+      <button class="btn-primary code-btn" id="btn-copy">复 制</button>
+      <div class="code-sep"></div>
+      <p class="code-tip">载入别人的存档码 / 自己以前存的：</p>
+      <textarea class="code-box" id="code-in" placeholder="把存档码粘到这里……"></textarea>
+      <button class="btn-primary code-btn" id="btn-load-code">载 入</button>
+      <p class="code-msg" id="code-msg"></p>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+</div>
+
+<script>
+  window.HUABEN = { gamesBase: '../games/' };
+</script>
+<script src="engine.js"></script>
+</body>
+</html>

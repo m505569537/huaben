@@ -1,0 +1,19 @@
+{
+  "name": "huaben",
+  "version": "0.1.0",
+  "description": "话本 —— 零依赖的网页文字游戏引擎：分支剧情、数值养成、条件锁、多结局、单文件发布",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "./serve.sh",
+    "validate": "node tools/validate.mjs",
+    "build": "node tools/build.mjs",
+    "check": "node tools/validate.mjs && node tools/build.mjs",
+    "new": "node tools/new-game.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["text-game", "visual-novel", "game-engine", "interactive-fiction"],
+  "license": "MIT"
+}
