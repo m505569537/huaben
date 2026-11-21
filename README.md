@@ -25,7 +25,7 @@
 需要 **Node 18+** 和 **Python 3**（只用来起本地服务）。
 
 ```bash
-git clone <repo-url> && cd huaben
+git clone https://github.com/m505569537/huaben.git && cd huaben
 
 npm run dev              # 起本地服务并打开浏览器（默认 games/zhiwei）
 npm run validate         # 校验所有剧本
