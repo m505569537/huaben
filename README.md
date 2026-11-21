@@ -57,6 +57,29 @@ huaben/
 
 ---
 
+## 文档
+
+| 文档 | 内容 |
+|---|---|
+| [docs/story-format.md](docs/story-format.md) | 剧本格式完整参考：节点、effect、条件锁、结局 |
+| [docs/game-balance.md](docs/game-balance.md) | **数值与结局阈值怎么定**。含三个真实翻车案例 |
+| [docs/save-system.md](docs/save-system.md) | 存档原理、三个限制、作弊面、什么时候才需要后端 |
+| [docs/deployment.md](docs/deployment.md) | Vercel 部署实录：三个坑与解法、发版 checklist |
+
+---
+
+## 配套 Skill
+
+`skills/text-game-dev/SKILL.md` 是给 AI agent 用的操作手册，把「写剧本 → 校数值 → 打包 → 发布 → 排错」的完整流程和踩过的坑都编码进去了。
+
+安装到全局 skills 目录（软链，改了仓库即生效）：
+
+```bash
+ln -s "$PWD/skills/text-game-dev" ~/.agents/skills/text-game-dev
+```
+
+---
+
 ## 加一个新游戏
 
 ```bash
