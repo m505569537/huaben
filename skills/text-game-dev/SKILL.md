@@ -121,8 +121,13 @@ docs/              格式 / 数值 / 存档 / 部署文档
 
 详见 `docs/save-system.md`。
 
-发布：Vercel 已配好，`git push` 到 main 自动重建。构建命令 `node tools/build.mjs`，输出 `dist`。
-详见 `docs/deployment.md`。
+发布：两条线路都已配好，`git push` 到 main 自动重建。构建命令 `node tools/build.mjs`，输出 `dist`。
+
+- **主线路** GitHub Pages `https://m505569537.github.io/huaben/` —— 国内可直连，但要求仓库公开
+- **备用** Vercel `https://huaben.vercel.app` —— `vercel.app` 国内被墙，需梯子
+
+⚠️ Pages 不支持 `cleanUrls`，站内链接要写 `./<id>.html`，不要写 `/zhiwei`。
+⚠️ 仓库公开意味着 `games/` 剧本可被 clone，内容保护见 `docs/deployment.md`。
 
 ---
 

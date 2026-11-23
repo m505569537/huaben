@@ -6,11 +6,14 @@
 
 ## 三种托管方式
 
-| 方式 | 私有仓库 | 成本 | 适合 |
-|---|---|---|---|
-| **Vercel** | ✅ 支持 | 免费 | 已配好，推荐 |
-| Netlify / Cloudflare Pages | ✅ 支持 | 免费 | 平替，Netlify 免费版能设站点密码 |
-| GitHub Pages | ❌ 免费账号不支持私有仓库 | 免费 | 公开仓库才用 |
+| 方式 | 私有仓库 | 国内直连 | 成本 | 现状 |
+|---|---|---|---|---|
+| **GitHub Pages** | ❌ 必须公开 | ✅ 实测可用 | 免费 | **主线路** |
+| Vercel | ✅ 支持 | ❌ 需梯子 | 免费 | 备用线路 |
+| Netlify / Cloudflare Pages | ✅ 支持 | ⚠️ 不稳 | 免费 | 未验证 |
+
+> `vercel.app` 域名在国内被 DNS 污染，不挂梯子打不开。
+> `*.github.io` 经实测（手机 4G、未挂 VPN）可正常访问，故主线路切到 Pages。
 
 静态托管的通用配置（三家都一样）：
 
@@ -89,15 +92,31 @@ git push -f origin main
 
 > 验证成功的标志：部署状态从 `Blocked` 变成 `Ready`，构建约 5 秒。
 
-### 坑 3：GitHub Pages 用不了
+### 坑 3：Pages 要求仓库公开
 
 ```
 HTTP 422: Your current plan does not support GitHub Pages for this repository.
 ```
 
-免费账号的**私有仓库**不支持 Pages。所以 `.github/workflows/pages.yml` 默认只留手动触发，避免每次 push 都报红。
+免费账号的**私有仓库**不支持 Pages。解法是把仓库转公开：
 
-要启用 Pages：把仓库转公开，再放开 `pages.yml` 里 `on:` 下的 `push:` 注释。
+```bash
+gh repo edit --visibility public --accept-visibility-change-consequences
+# Pages 源设为 GitHub Actions
+gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow
+```
+
+然后让 `pages.yml` 在 push 时触发即可。
+
+### Pages 与 Vercel 的行为差异
+
+| | GitHub Pages | Vercel |
+|---|---|---|
+| 路径 | `/zhiwei.html`（严格匹配文件） | `/zhiwei`（`cleanUrls` 生效） |
+| 构建 | Actions 里跑 `tools/build.mjs` | `vercel.json` 里配 |
+| 国内访问 | ✅ | ❌ |
+
+所以站内链接一律用 `./<id>.html`，两边都能用。
 
 ---
 
@@ -140,3 +159,35 @@ npm run check      # 校验剧本 + 打包，必须绿
 Vercel → 项目 → Settings → Domains → 添加域名，按提示配 DNS。
 
 ⚠️ 国内访问需要 ICP 备案；用 `*.vercel.app` 默认域名可以先跑起来。
+
+
+---
+
+## 内容保护
+
+Pages 要求仓库公开，意味着 `games/*/story.js` 全文可被搜索、可被 `git clone` 后改名重发。
+
+**这是纯前端方案的固有代价**：即使仓库私有，网页上的正文本来也能被人复制。
+
+### 缓解方案（按成本排序）
+
+| 方案 | 防什么 | 成本 |
+|---|---|---|
+| 随时接受 | —— | 无 |
+| 只公开引擎，剧本放私有仓库，构建时用 PAT 拉取 | 防 clone 后重发（正文仍可看） | 中，需配 secret |
+| 加后端，付费内容按会话下发 | 防全文被抓 | 高 |
+
+第二种的实现思路：
+
+1. 建私有仓库 `<owner>/huaben-games`，存放 `games/`
+2. 在公开仓库建细粒度 PAT（只读该私有仓库），存进 `Settings → Secrets → GAMES_TOKEN`
+3. `pages.yml` 里构建前先拉取：
+
+```yaml
+- name: 拉取私有剧本
+  run: |
+    git clone --depth 1 https://x-access-token:${{ secrets.GAMES_TOKEN }}@github.com/<owner>/huaben-games.git .games
+    cp -R .games/games/* games/
+```
+
+这样公开仓库里没有剧本，clone 下来是个空壳；而部署出来的站点照常可玩。

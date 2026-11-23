@@ -4,7 +4,9 @@
 
 《知微》就是用它写的：一部重生宫斗题材的女频文字游戏，29 个节点、4 个结局、672 条通关路径。
 
-**在线试玩：[huaben.vercel.app](https://huaben.vercel.app)**
+**在线试玩：<https://m505569537.github.io/huaben/>**
+
+> 国内直连（未挂 VPN）实测可用。备用线路：<https://huaben.vercel.app>（需梯子）
 
 ![封面](screenshots/01-封面.png)
 
@@ -158,12 +160,22 @@ npm run build
 # dist/index.html    游戏列表页
 ```
 
-### 方式一：Vercel（已配置好，push 即部署）
+### 方式一：GitHub Pages（主线路，国内可直连）
 
-本项目已连上 Vercel 并完成首次部署：**https://huaben.vercel.app**
+**https://m505569537.github.io/huaben/** —— push 到 `main` 自动部署。
 
-之后每次 push 到 `main`，Vercel 会自动重新构建发布。构建配置写在 `vercel.json` 里，
-换到 Netlify / Cloudflare Pages 时照抄这三项即可：
+⚠️ 前置条件：**仓库必须公开**（免费账号的私有仓库不支持 Pages）。
+代价是 `games/` 下的剧本全文可被搜索、可被 clone。介意的话见
+[docs/deployment.md](docs/deployment.md) 里的「内容保护」一节。
+
+注意 Pages 不支持 Vercel 的 `cleanUrls`，地址要带 `.html`：`/huaben/zhiwei.html`
+
+### 方式二：Vercel（备用线路，国内需梯子）
+
+已配置好：**https://huaben.vercel.app**，push 到 `main` 自动重新发布。
+`vercel.app` 域名在国内被污染，留作海外访问或备用。
+
+两种平台的构建配置都是这三项：
 
 | 项 | 值 |
 |---|---|
@@ -172,13 +184,6 @@ npm run build
 | Node 版本 | 20 |
 
 之后每次 push 自动重新发布，拿到 `https://xxx.vercel.app` 就能发给玩家。
-
-### 方式二：GitHub Pages
-
-需要**公开仓库** —— 免费账号的私有仓库不支持 Pages（实测 422）。
-
-仓库转公开后，在 **Settings → Pages → Source** 选 **GitHub Actions**，
-再把 `.github/workflows/pages.yml` 里 `on:` 下的 `push:` 两行注释放开即可。
 
 ### 方式三：直接发文件
 
