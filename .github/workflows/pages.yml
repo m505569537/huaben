@@ -1,16 +1,18 @@
 name: Deploy to Pages
 
-# ⚠️ 私有仓库 + 免费账号不支持 GitHub Pages（GitHub 的限制，已实测）。
-#    两种解决办法：
-#      1. 把仓库转成公开 → 把下面 on: 里的 push/main 两行放开即可自动部署
-#      2. 继续用私有仓库 → 改用 Vercel / Netlify 连仓库部署，见 README
+# 部署到 GitHub Pages。
 #
-# 目前只保留手动触发，避免每次 push 都报红。
+# 前置条件：仓库必须是**公开**的 —— 免费账号的私有仓库不支持 Pages（实测 HTTP 422）。
+#
+# ⚠️ 转公开意味着 games/ 下的剧本全文可被搜索、可被 git clone。
+#    介意的话，把剧本挪到私有仓库、用 PAT 在构建时拉取，见 docs/deployment.md。
+#
+# 线上地址：https://m505569537.github.io/huaben/
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-#  push:
-#    branches: [main]
 
 permissions:
   contents: read
