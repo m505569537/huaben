@@ -11,7 +11,7 @@
  *
  * 退出码：0 = 通过，1 = 有错误
  */
-import { listGames, loadGame, enumeratePaths, MAX_PATHS } from './lib.mjs';
+import { listGames, loadGame, countPaths, exploreStates, extremeStats } from './lib.mjs';
 
 const C = {
   ok: s => `\x1b[32m${s}\x1b[0m`,
@@ -128,14 +128,16 @@ function validateGame(id) {
   const orphans = nodeIds.filter(n => !seen.has(n));
   if (orphans.length) errors.push(`这些节点走不到：${orphans.join(', ')}`);
 
-  // ---------- 路径穷举 ----------
-  const { results, usedChoices, cycles, truncated } = enumeratePaths(story);
+  // ---------- 路径穷举 + 状态空间 ----------
+  const paths = countPaths(story);
+  const { results, usedChoices, cycles, truncated, states } = exploreStates(story);
 
   if (cycles.length) {
     const uniq = [...new Set(cycles)];
     errors.push(`检测到环（引擎不支持循环）：${uniq[0]}`);
   }
-  if (truncated) warns.push(`通关路径超过 ${MAX_PATHS} 条，只枚举了前面一部分，结论可能不完整`);
+  if (truncated) warns.push(`状态空间超过 ${states} 个，只遍历了前面一部分，结论可能不完整`);
+  if (paths.truncated) warns.push(`通关路径超过 ${paths.count} 条（已按量级截断，不影响结局可达性检查）`);
 
   const endings = Object.entries(nodes).filter(([, n]) => n.ending);
   const hit = new Map();
@@ -163,13 +165,21 @@ function validateGame(id) {
   // ---------- 数值范围 ----------
   const ranges = {};
   if (results.length) {
+    const ex = extremeStats(story);
     for (const k of statKeys) {
-      const vals = results.map(r => r.stats[k]);
-      ranges[k] = [Math.min(...vals), Math.max(...vals)];
+      let lo = ex[k].min, hi = ex[k].max;
+      for (const r of results) {
+        const v = r.stats[k];
+        if (v < lo) lo = v;
+        if (v > hi) hi = v;
+      }
+      if (!Number.isFinite(lo)) lo = 0;
+      if (!Number.isFinite(hi)) hi = 0;
+      ranges[k] = [lo, hi];
     }
   }
 
-  return { id, title: story.meta.title, errors, warns, stats: { nodes: nodeIds.length, endings, hit, results, ranges, truncated } };
+  return { id, title: story.meta.title, errors, warns, stats: { nodes: nodeIds.length, endings, hit, results, ranges, truncated, paths, states } };
 }
 
 // ------------------------------ 输出 ------------------------------
@@ -190,8 +200,9 @@ for (const id of targets) {
   const s = r.stats;
   if (s) {
     console.log(C.ok(`  ✓ 结构  `) + C.dim(`${s.nodes} 个节点 / ${s.endings.length} 个结局`));
-    const reach = s.truncated ? '（截断）' : '';
-    console.log(C.ok(`  ✓ 路径  `) + C.dim(`${s.results.length} 条通关路径${reach}`));
+    const reach = s.paths.truncated ? '+' : '';
+    console.log(C.ok(`  ✓ 路径  `) + C.dim(`${s.paths.count}${reach} 条通关路径`));
+    console.log(C.ok(`  ✓ 状态  `) + C.dim(`${s.states} 个去重状态${s.truncated ? '（截断）' : ''}`));
     const list = s.endings
       .map(([, n]) => `${n.ending.title}(${s.hit.get(n.ending.title) || 0})`)
       .join('  ');
